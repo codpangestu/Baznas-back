@@ -10,6 +10,51 @@
 			"name": "Auth",
 			"item": [
 				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if(jsonData.data && jsonData.data.token) {",
+									"    pm.environment.set(\"token\", jsonData.data.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"User Daerah\",\n    \"email\": \"daerah@baznas.go.id\",\n    \"password\": \"password\",\n    \"role\": \"daerah\",\n    \"organization_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Login",
 					"event": [
 						{
@@ -35,7 +80,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"admin@baznas.go.id\",\n    \"password\": \"password\"\n}",
+							"raw": "{\n    \"email\": \"admin@test.com\",\n    \"password\": \"password\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -105,7 +150,7 @@
 					"response": []
 				},
 				{
-					"name": "Create Organization",
+					"name": "Create Organization (Admin Only)",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -188,7 +233,7 @@
 					"response": []
 				},
 				{
-					"name": "Delete Organization",
+					"name": "Delete Organization (Admin Only)",
 					"request": {
 						"auth": {
 							"type": "bearer",

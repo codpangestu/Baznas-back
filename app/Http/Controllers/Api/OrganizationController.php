@@ -10,7 +10,7 @@ class OrganizationController extends Controller
 {
     public function index()
     {
-        $organizations = Organization::all();
+        $organizations = Organization::paginate(10);
         return response()->json([
             'message' => 'Organizations retrieved successfully',
             'data' => $organizations
@@ -50,6 +50,11 @@ class OrganizationController extends Controller
     public function update(Request $request, $id)
     {
         $organization = Organization::findOrFail($id);
+        $user = $request->user();
+
+        if ($user->role === 'daerah' && $user->organization_id != $organization->id) {
+            return response()->json(['message' => 'Forbidden: You can only update your own organization'], 403);
+        }
 
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
