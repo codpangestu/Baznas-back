@@ -12,6 +12,7 @@ Route::get('/organizations/{id}', [OrganizationController::class, 'show']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
     
     // Admin only routes
     Route::middleware('admin')->group(function () {
