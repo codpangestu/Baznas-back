@@ -5,28 +5,33 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    /**
+     * Handle user registration.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function register(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-            'role' => 'in:admin,daerah',
-            'organization_id' => 'nullable|exists:organizations,id'
+            'password' => ['required', 'string', Password::min(8)->letters()->numbers()],
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => $validated['role'] ?? 'daerah',
-            'organization_id' => $validated['organization_id'] ?? null,
+            'role' => 'daerah', // Force default role to 'daerah' for security
+            'organization_id' => null, // New users should be assigned by admin later
         ]);
 
         $token = $user->createToken('api-token')->plainTextToken;
@@ -40,7 +45,13 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function login(Request $request)
+    /**
+     * Handle user login.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function login(Request $request): JsonResponse
     {
         $request->validate([
             'email' => 'required|email',
@@ -54,6 +65,7 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
+        /** @var \App\Models\User $user */
         $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
@@ -65,7 +77,13 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout(Request $request)
+    /**
+     * Handle user logout.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function logout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()->delete();
 

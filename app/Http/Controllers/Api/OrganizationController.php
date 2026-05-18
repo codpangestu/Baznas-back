@@ -5,10 +5,17 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Gate;
 
 class OrganizationController extends Controller
 {
-    public function index()
+    /**
+     * Display a listing of the organizations.
+     *
+     * @return JsonResponse
+     */
+    public function index(): JsonResponse
     {
         $organizations = Organization::paginate(10);
         return response()->json([
@@ -17,7 +24,13 @@ class OrganizationController extends Controller
         ]);
     }
 
-    public function show($id)
+    /**
+     * Display the specified organization.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function show(int $id): JsonResponse
     {
         $organization = Organization::findOrFail($id);
         return response()->json([
@@ -26,8 +39,16 @@ class OrganizationController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    /**
+     * Store a newly created organization in storage.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function store(Request $request): JsonResponse
     {
+        Gate::authorize('create', Organization::class);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'region' => 'required|string|max:255',
@@ -47,14 +68,18 @@ class OrganizationController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Update the specified organization in storage.
+     *
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function update(Request $request, int $id): JsonResponse
     {
         $organization = Organization::findOrFail($id);
-        $user = $request->user();
-
-        if ($user->role === 'daerah' && $user->organization_id != $organization->id) {
-            return response()->json(['message' => 'Forbidden: You can only update your own organization'], 403);
-        }
+        
+        Gate::authorize('update', $organization);
 
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
@@ -75,9 +100,18 @@ class OrganizationController extends Controller
         ]);
     }
 
-    public function destroy($id)
+    /**
+     * Remove the specified organization from storage.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function destroy(int $id): JsonResponse
     {
         $organization = Organization::findOrFail($id);
+        
+        Gate::authorize('delete', $organization);
+
         $organization->delete();
         
         return response()->json([
