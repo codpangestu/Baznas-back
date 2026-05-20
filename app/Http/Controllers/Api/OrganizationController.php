@@ -11,14 +11,16 @@ use Illuminate\Support\Facades\Gate;
 class OrganizationController extends Controller
 {
     /**
-     * Display a listing of the organizations.
+     * Display a listing of the organizations with eager loaded province and daerah.
      *
      * @return JsonResponse
      */
     public function index(): JsonResponse
     {
-        $organizations = Organization::paginate(10);
+        $organizations = Organization::with(['province', 'daerah'])->paginate(10);
+        
         return response()->json([
+            'success' => true,
             'message' => 'Organizations retrieved successfully',
             'data' => $organizations
         ]);
@@ -32,8 +34,10 @@ class OrganizationController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $organization = Organization::findOrFail($id);
+        $organization = Organization::with(['province', 'daerah'])->findOrFail($id);
+        
         return response()->json([
+            'success' => true,
             'message' => 'Organization retrieved successfully',
             'data' => $organization
         ]);
@@ -57,12 +61,18 @@ class OrganizationController extends Controller
             'website' => 'nullable|url',
             'instagram' => 'nullable|string',
             'email' => 'nullable|email',
-            'status' => 'in:active,inactive'
+            'status' => 'in:active,inactive',
+            'province_id' => 'nullable|exists:provinces,id',
+            'daerah_id' => 'nullable|exists:daerahs,id'
         ]);
 
         $organization = Organization::create($validated);
 
+        // Load relations for response
+        $organization->load(['province', 'daerah']);
+
         return response()->json([
+            'success' => true,
             'message' => 'Organization created successfully',
             'data' => $organization
         ], 201);
@@ -89,12 +99,18 @@ class OrganizationController extends Controller
             'website' => 'nullable|url',
             'instagram' => 'nullable|string',
             'email' => 'nullable|email',
-            'status' => 'in:active,inactive'
+            'status' => 'in:active,inactive',
+            'province_id' => 'nullable|exists:provinces,id',
+            'daerah_id' => 'nullable|exists:daerahs,id'
         ]);
 
         $organization->update($validated);
 
+        // Load relations for response
+        $organization->load(['province', 'daerah']);
+
         return response()->json([
+            'success' => true,
             'message' => 'Organization updated successfully',
             'data' => $organization
         ]);
@@ -115,6 +131,7 @@ class OrganizationController extends Controller
         $organization->delete();
         
         return response()->json([
+            'success' => true,
             'message' => 'Organization deleted successfully'
         ]);
     }

@@ -17,7 +17,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = pm.response.json();",
-									"if(jsonData.data && jsonData.data.token) {",
+									"if(jsonData.success && jsonData.data && jsonData.data.token) {",
 									"    pm.environment.set(\"token\", jsonData.data.token);",
 									"}"
 								],
@@ -35,7 +35,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"User Daerah\",\n    \"email\": \"daerah@baznas.go.id\",\n    \"password\": \"password\",\n    \"role\": \"daerah\",\n    \"organization_id\": 1\n}",
+							"raw": "{\n    \"name\": \"User Daerah\",\n    \"email\": \"daerah@baznas.go.id\",\n    \"password\": \"password123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -62,7 +62,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = pm.response.json();",
-									"if(jsonData.data && jsonData.data.token) {",
+									"if(jsonData.success && jsonData.data && jsonData.data.token) {",
 									"    pm.environment.set(\"token\", jsonData.data.token);",
 									"}"
 								],
@@ -214,7 +214,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Baznas Jawa Barat\",\n    \"region\": \"Jawa Barat\",\n    \"email\": \"jabar@baznas.go.id\",\n    \"status\": \"active\"\n}",
+							"raw": "{\n    \"name\": \"BAZNAS Kota Bandung\",\n    \"region\": \"Bandung\",\n    \"email\": \"bandung@baznas.go.id\",\n    \"status\": \"active\",\n    \"province_id\": 1,\n    \"daerah_id\": 1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -255,7 +255,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Baznas Provinsi Jawa Barat\",\n    \"region\": \"Provinsi Jawa Barat\"\n}",
+							"raw": "{\n    \"name\": \"BAZNAS Kota Bandung Updated\",\n    \"region\": \"Bandung Raya\",\n    \"province_id\": 1,\n    \"daerah_id\": 1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -303,6 +303,338 @@
 							"path": [
 								"organizations",
 								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Provinces",
+			"item": [
+				{
+					"name": "Get All Provinces",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/provinces",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"provinces"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Province by Slug",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/provinces/jawa-barat",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"provinces",
+								"jawa-barat"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Province (Admin Only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Bali\",\n    \"image\": \"https://images.unsplash.com/photo-1537996194471-e657df975ab4\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/provinces",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"provinces"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Province (Admin Only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Bali Paradise\",\n    \"image\": \"https://images.unsplash.com/photo-1537996194471-e657df975ab4\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/provinces/4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"provinces",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Province (Admin Only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/provinces/4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"provinces",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Daerahs",
+			"item": [
+				{
+					"name": "Get All Daerahs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/daerahs",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"daerahs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Daerah by Slug",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/daerahs/kota-bandung",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"daerahs",
+								"kota-bandung"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Daerah (Admin Only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"province_id\": 1,\n    \"name\": \"Kota Bekasi\",\n    \"image\": \"https://images.unsplash.com/photo-1596700778735-a6e5340eb93b\",\n    \"website\": \"https://bekasikota.baznas.go.id\",\n    \"instagram\": \"@baznaskotabekasi\",\n    \"email\": \"baznas.kotabekasi@baznas.go.id\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/daerahs",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"daerahs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Daerah (Admin Only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"province_id\": 1,\n    \"name\": \"Kota Bekasi Jaya\",\n    \"website\": \"https://bekasi.baznas.go.id\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/daerahs/4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"daerahs",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Daerah (Admin Only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/daerahs/4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"daerahs",
+								"4"
 							]
 						}
 					},
