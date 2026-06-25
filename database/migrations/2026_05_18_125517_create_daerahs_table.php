@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('province_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->string('slug')->unique()->index();
-            $table->string('image')->nullable();
+            $table->text('image')->nullable();
             $table->string('website')->nullable();
             $table->string('instagram')->nullable();
             $table->string('email')->nullable();

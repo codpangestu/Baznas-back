@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('region');
             $table->text('description')->nullable();
-            $table->string('logo')->nullable();
+            $table->text('logo')->nullable();
             $table->string('website')->nullable();
             $table->string('instagram')->nullable();
             $table->string('email')->nullable();
