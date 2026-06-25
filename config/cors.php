@@ -27,10 +27,12 @@ return [
         'http://localhost:3000',
         'http://localhost:8000',
         'http://127.0.0.1:8000',
+        'https://baznascentralize.vercel.app',
     ],
 
     'allowed_origins_patterns' => [
         '#^http://(localhost|127\.0\.0\.1):\d+$#', // Matches any dynamic localhost/127.0.0.1 development port
+        '#^https://.*\.vercel\.app$#', // Matches any vercel subdomains
     ],
 
     'allowed_headers' => ['Content-Type', 'X-Requested-With', 'Authorization', 'Accept'],
